@@ -2,6 +2,10 @@
 
 A standalone Lovelace card styled after the provided Synology dashboard screenshot. It displays NAS CPU, memory, temperature, uptime, DSM update/status, one volume, up to four drive health tiles, and inbound/outbound network rates.
 
+## Version 1.0.1
+
+Fixes the card editor rebuilding its form during text entry, which could interrupt typing in fields such as the NAS model.
+
 ## What it needs
 
 - Home Assistant's built-in **Synology DSM** integration configured for your NAS.

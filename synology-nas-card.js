@@ -3,7 +3,7 @@
  * Copyright (c) 2026
  * SPDX-License-Identifier: MIT
  */
-const CARD_VERSION = "1.0.0";
+const CARD_VERSION = "1.0.1";
 const MAX_DRIVES = 4;
 
 const ICONS = {
@@ -280,20 +280,44 @@ for (let i = 1; i <= MAX_DRIVES; i++) {
 }
 
 class SynologyNasCardEditor extends HTMLElement {
-  constructor() { super(); this.attachShadow({ mode: "open" }); this._config = {}; }
-  set hass(hass) { this._hass = hass; this._render(); }
-  setConfig(config) { this._config = { ...DEFAULTS, ...config }; this._render(); }
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this._config = { ...DEFAULTS };
+    this._form = null;
+    this._updatingForm = false;
+  }
+
+  set hass(hass) {
+    this._hass = hass;
+    if (this._form) this._form.hass = hass;
+    else this._render();
+  }
+
+  setConfig(config) {
+    const nextConfig = { ...DEFAULTS, ...config };
+    const changed = JSON.stringify(nextConfig) !== JSON.stringify(this._config);
+    this._config = nextConfig;
+    if (!this._form) this._render();
+    else if (changed) {
+      this._updatingForm = true;
+      this._form.data = this._config;
+      this._updatingForm = false;
+    }
+  }
+
   _render() {
     if (!this.shadowRoot || !this._hass || !customElements.get("ha-form")) return;
     const schema = EDITOR_FIELDS.map(([name, label, kind]) => ({ name, label, selector: kind === "entity" ? { entity: {} } : { text: {} } }));
     this.shadowRoot.innerHTML = `<style>:host{display:block}ha-form{display:block;padding:8px 0}</style><ha-form></ha-form>`;
-    const form = this.shadowRoot.querySelector("ha-form");
-    form.hass = this._hass;
-    form.data = this._config;
-    form.schema = schema;
-    form.computeLabel = (selector) => selector.label;
-    form.addEventListener("value-changed", (ev) => {
+    this._form = this.shadowRoot.querySelector("ha-form");
+    this._form.hass = this._hass;
+    this._form.data = this._config;
+    this._form.schema = schema;
+    this._form.computeLabel = (selector) => selector.label;
+    this._form.addEventListener("value-changed", (ev) => {
       ev.stopPropagation();
+      if (this._updatingForm) return;
       this._config = { ...this._config, ...ev.detail.value };
       this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config }, bubbles: true, composed: true }));
     });
