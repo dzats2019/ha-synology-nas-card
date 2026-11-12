@@ -1,0 +1,6 @@
+{
+  "name": "Synology NAS Card",
+  "content_in_root": true,
+  "filename": "synology-nas-card.js",
+  "render_readme": true
+}
