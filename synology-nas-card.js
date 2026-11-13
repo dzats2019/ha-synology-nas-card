@@ -3,7 +3,7 @@
  * Copyright (c) 2026
  * SPDX-License-Identifier: MIT
  */
-const CARD_VERSION = "1.0.5";
+const CARD_VERSION = "1.0.6";
 const MAX_DRIVES = 4;
 
 const ICONS = {
@@ -182,9 +182,9 @@ class SynologyNasCard extends HTMLElement {
     const tempNum = numeric(tempState);
     const status = stateText(statusState);
     const smart = stateText(smartState);
-    const smartRow = c[`drive_${index}_smart_entity`] ? `<div class="drive-state"><span class="ico ${bad ? "red" : "green"} small">${ICONS.cpu}</span>${escapeHtml(smart)}</div>` : "";
     const samples = this._samples[c[`drive_${index}_temperature_entity`]] || [];
     const bad = /failed|critical|error|abnormal|not.?healthy|attention/i.test(`${status} ${smart}`);
+    const smartRow = c[`drive_${index}_smart_entity`] ? `<div class="drive-state"><span class="ico ${bad ? "red" : "green"} small">${ICONS.cpu}</span>${escapeHtml(smart)}</div>` : "";
     const chart = samples.length < 2 ? "" : `<path class="spark-fill" d="${miniLine(samples)} L98 24 L2 24 Z"/><g class="spark-line">${miniLine(samples)}</g>`;
     return `<article class="drive ${bad ? "bad" : ""}">
       <div class="drive-head"><span class="disk-icon">${ICONS.disk}</span><b title="${escapeHtml(name)}">${escapeHtml(name)}</b></div>
