@@ -2,12 +2,13 @@
 
 A standalone Lovelace card styled after the provided Synology dashboard screenshot. It displays NAS CPU, memory, temperature, uptime, DSM update/status, one volume, up to four drive health tiles, and inbound/outbound network rates.
 
-## Version 1.0.3
+## Version 1.0.5
 
 - Fixes the card editor rebuilding its form during text entry, which could interrupt typing in fields such as the NAS model.
 - Respects sensor units for CPU and RAM values, so a memory quantity in MB is no longer mislabeled as a percentage.
 - Selects a two-bay illustration automatically when the model is DS218.
 - Switches the overview layout based on card width so the DSM update status remains visible in a narrow dashboard column.
+- Refines the DS218 illustration to show its covered front panel rather than exposed drive trays. The drive temperatures now have a label and align within each drive tile.
 
 ## What it needs
 
